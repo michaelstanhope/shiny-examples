@@ -8,10 +8,10 @@
   <meta name="generator" content="slidify" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
-  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+  <link rel="stylesheet" href="libraries/frameworks/mike/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/mike/css/phone.css" 
     media="only screen and (max-device-width: 480px)" >
-  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/frameworks/mike/css/slidify.css" >
   <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
   <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
 
@@ -19,8 +19,8 @@
   <!-- Grab CDN jQuery, fall back to local if offline -->
   <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
   <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
-  <script data-main="libraries/frameworks/io2012/js/slides" 
-    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  <script data-main="libraries/frameworks/mike/js/slides" 
+    src="libraries/frameworks/mike/js/require-1.0.8.min.js">
   </script>
   
   
@@ -32,11 +32,11 @@
     <!-- LOGO SLIDE -->
         <slide class="title-slide segue nobackground">
   <aside class="gdbar">
-    <img src="assets/img/flag.png">
+    <img src="assets/img/cat.jpg">
   </aside>
   <hgroup class="auto-fadein">
     <h1>My Student Loan Repayment Estimator</h1>
-    <h2>How I made it and why it is so mediocre</h2>
+    <h2>Now with horrible slides</h2>
     <p>Michael Stanhope<br/>Consultant, Rittman Mead</p>
   </hgroup>
   <article></article>  
@@ -46,14 +46,24 @@
     <!-- SLIDES -->
     <slide class="" id="slide-1" style="background:;">
   <hgroup>
-    <h2>Read-And-Delete</h2>
+    <h2>2. Introduction</h2>
   </hgroup>
   <article data-timings="">
-    <ol>
-<li>Edit YAML front matter</li>
-<li>Write using R Markdown</li>
-<li>Use an empty line followed by three dashes to separate slides!</li>
-</ol>
+    <p>UK students typically take out a loan to cover the costs of their studies. This loan is repaid after completion of the degree. The amount of time that it will take for a given graduate to repay their loan will depend on many factors such as:</p>
+
+<ul>
+<li>The starting balance</li>
+<li>The graduate&#39;s starting salary after entering employment</li>
+<li>The rate of interest applied to the loan and</li>
+<li>The average annual increase in the graduate&#39;s salary</li>
+</ul>
+
+<p>I have developed an <a href="https://michaelstanhope.shinyapps.io/shiny-examples/">application</a> that can be used to estimate the amount of time that it will take for a graduate to repay their loan. A user can input values for the above factors and the application will compute estimates for:</p>
+
+<ul>
+<li>The time that it will take to repay the loan</li>
+<li>The total amount of interest payments over the period</li>
+</ul>
 
   </article>
   <!-- Presenter Notes -->
@@ -61,10 +71,105 @@
 
 <slide class="class" id="id" style="background:;">
   <hgroup>
-    <h2>Slide 2</h2>
+    <h2>3. Sample output</h2>
   </hgroup>
   <article data-timings="">
-    
+    <p><img src="assets/img/app.png" alt="width"></p>
+
+<pre><code class="r">gvisLineChart(df,
+              xvar=&quot;years&quot;, 
+              yvar=c(&quot;Balance&quot;,&quot;Payments&quot;), 
+              options=list(
+                  width=600,
+                  height=250,
+                  #title=&quot;Outstanding Balance and Monthly Payments&quot;,
+                  hAxes=&quot;[{title:&#39;Time in Employment (Years)&#39;}]&quot;,
+                  series=&quot;[{targetAxisIndex: 0},{targetAxisIndex:1}]&quot;,
+                  vAxes=&quot;[{title:&#39;Balance (£)&#39;}, {title:&#39;Monthly Payments (£)&#39;}]&quot;))
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>4. How it works</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">sliderInput(&quot;startValue&quot;, &quot;Initial Loan Amount (£):&quot;, 
+            min = 3000, max = 50000, value = 25000, step = 100)
+# This is an example of a UI widget
+</code></pre>
+
+<pre><code class="r"># The server code receives the values from the UI widgets
+output$repaymentPlot &lt;- renderGvis({
+        annualInterest &lt;- input$annualInterest # input taken from the UI
+        startValue &lt;-input$startValue
+</code></pre>
+
+<pre><code class="r"># The server code then does a bunch of computation (this is just a sample)
+for(i in 2:length(month))
+    {
+        balance[i] &lt;- balance[i-1] + monthlyInterest*balance[i-1] - monthlyPayments[i]
+        total &lt;- total + max(monthlyInterest*balance[i-1],0)
+    }
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>5. How it works (continued)</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>## Warning: package &#39;googleVis&#39; was built under R version 3.1.1
+</code></pre>
+
+<pre><code>## 
+## Welcome to googleVis version 0.5.6
+## 
+## Please read the Google API Terms of Use
+## before you start using the package:
+## https://developers.google.com/terms/
+## 
+## Note, the plot method of googleVis will by default use
+## the standard browser to display its output.
+## 
+## See the googleVis package vignettes for more details,
+## or visit http://github.com/mages/googleVis.
+## 
+## To suppress this message use:
+## suppressPackageStartupMessages(library(googleVis))
+</code></pre>
+
+<pre><code>## Error: could not find function &quot;index&quot;
+</code></pre>
+
+<pre><code class="r"># The UI code receives the computed results via the output object and uses them
+div(htmlOutput(&quot;repaymentPlot&quot;)) # A snipet of UI code
+</code></pre>
+
+<pre><code class="r">length(balance) # Gives the total repayment time (months)
+</code></pre>
+
+<pre><code>## [1] 239
+</code></pre>
+
+<pre><code class="r">total # Gives the total amount of interest accumulated
+</code></pre>
+
+<pre><code>## [1] 5217
+</code></pre>
+
+<pre><code class="r">head(balance, 5) # Gives a running balance
+</code></pre>
+
+<pre><code>## [1] 25000 25031 25062 25093 25124
+</code></pre>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -75,14 +180,26 @@
     <ul>
       <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=1 title='Read-And-Delete'>
+        data-slide=1 title='2. Introduction'>
          1
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=2 title='Slide 2'>
+        data-slide=2 title='3. Sample output'>
          2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='4. How it works'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='5. How it works (continued)'>
+         4
       </a>
     </li>
   </ul>
