@@ -70,7 +70,7 @@ for(i in 2:length(month))
 --- .class #id 
 ## 5. How it works (continued)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 library(googleVis)
 annualInterest <- 1.5
 annualIncrease <- 4

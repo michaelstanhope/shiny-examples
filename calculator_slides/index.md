@@ -75,31 +75,6 @@ for(i in 2:length(month))
 ## 5. How it works (continued)
 
 
-```
-## Warning: package 'googleVis' was built under R version 3.1.1
-```
-
-```
-## 
-## Welcome to googleVis version 0.5.6
-## 
-## Please read the Google API Terms of Use
-## before you start using the package:
-## https://developers.google.com/terms/
-## 
-## Note, the plot method of googleVis will by default use
-## the standard browser to display its output.
-## 
-## See the googleVis package vignettes for more details,
-## or visit http://github.com/mages/googleVis.
-## 
-## To suppress this message use:
-## suppressPackageStartupMessages(library(googleVis))
-```
-
-```
-## Error: could not find function "index"
-```
 
 
 ```r
